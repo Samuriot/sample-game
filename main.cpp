@@ -5,6 +5,9 @@
 
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_WIDTH = 800;
+const int GRAVITY = 1;
+const int MOVE_SPEED = 5;
+const int JUMP_FORCE = -15;
 
 void close_SDL(SDL_Renderer* renderer, SDL_Window* window); 
 void render_obj(SDL_Renderer* renderer, Object* obj);
@@ -39,22 +42,31 @@ int main() {
         if(event.type == SDL_QUIT) {
           running = false;
         }
-        else if(event.type == SDL_KEYDOWN) {
-          switch(event.key.keysym.sym) {
-            case SDLK_UP:
-              player.decrementY();
-              break;
-            case SDLK_DOWN:
-              player.incrementY();
-              break;
-            case SDLK_RIGHT:
-              player.incrementX();
-              break;
-            case SDLK_LEFT:
-              player.decrementX();
-              break;
+        else if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+          // Only jump if on the ground
+          if(player.getY() + player.getHeight() >= SCREEN_HEIGHT) {
+            player.setVelY(JUMP_FORCE);
           }
         }
+      }
+
+      // Check held keys
+      const Uint8* keys = SDL_GetKeyboardState(NULL);
+      int velX = 0;
+      if (keys[SDL_SCANCODE_LEFT])  velX -= MOVE_SPEED;
+      if (keys[SDL_SCANCODE_RIGHT]) velX += MOVE_SPEED;
+      player.setVelX(velX);
+
+      // Apply gravity
+      player.setVelY(player.getVelY() + GRAVITY);
+
+      // Apply velocity to position
+      player.applyVelocity();
+
+      // Ground collision (simple)
+      if (player.getY() + player.getHeight() > SCREEN_HEIGHT) {
+        player.setY(SCREEN_HEIGHT - player.getHeight());
+        player.setVelY(0);
       }
 
       //Clear screen
