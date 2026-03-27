@@ -5,22 +5,24 @@
 class Object {
   private:
     int x;
+    int velX;
+    int velY;
     int y;
     int width;
     int height;
-    int speed;
   public:
-    Object(int x, int y, int w, int h, int speed = 10);
+    Object(int x, int y, int w, int h);
     int getX();
     int getY();
     int getWidth();
     int getHeight();
     void setX(int);
     void setY(int);
-    void incrementX();
-    void incrementY();
-    void decrementX();
-    void decrementY();
+    int getVelX();
+    int getVelY();
+    void setVelX(int);
+    void setVelY(int);
+    void applyVelocity();
 };
 
 #endif // OBJECT_H

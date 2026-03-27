@@ -1,11 +1,12 @@
 #include "object.h"
 
-Object::Object(int x, int y, int w, int h, int speed) {
+Object::Object(int x, int y, int w, int h) {
   this->x = x;
+  this->velX = 0;
   this->y = y;
+  this->velY = 0;
   this->width = w;
   this->height = h;
-  this->speed = speed;
 }
 
 int Object::getX() {
@@ -24,6 +25,14 @@ int Object::getHeight() {
   return this->height;
 }
 
+int Object::getVelX() {
+  return this->velX;
+}
+
+int Object::getVelY() {
+  return this->velY;
+}
+
 void Object::setX(int x) { 
   if(x <= 0)
     this->x = 0;
@@ -38,19 +47,16 @@ void Object::setY(int y) {
     this->y = y;
 }
 
-void Object::incrementX() {
-  this->x += this->speed;
+void Object::setVelX(int v) {
+  this->velX = v;
 }
 
-void Object::incrementY() {
-  this->y += this->speed;
+void Object::setVelY(int v) {
+  this->velY = v;
 }
 
-void Object::decrementX() {
-  this->x -= this->speed;
-}
-
-void Object::decrementY() {
-  this->y -= this->speed;
+void Object::applyVelocity() {
+  this->x += this->velX;
+  this->y += this->velY;
 }
 
