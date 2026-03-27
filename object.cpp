@@ -1,10 +1,11 @@
 #include "object.h"
 
-Object::Object(int x, int y, int w, int h) {
+Object::Object(int x, int y, int w, int h, int speed) {
   this->x = x;
   this->y = y;
   this->width = w;
   this->height = h;
+  this->speed = speed;
 }
 
 int Object::getX() {
@@ -38,18 +39,18 @@ void Object::setY(int y) {
 }
 
 void Object::incrementX() {
-  this->x++;
+  this->x += this->speed;
 }
 
 void Object::incrementY() {
-  this->y++;
+  this->y += this->speed;
 }
 
 void Object::decrementX() {
-  this->x--;
+  this->x -= this->speed;
 }
 
 void Object::decrementY() {
-  this->y--;
+  this->y -= this->speed;
 }
 

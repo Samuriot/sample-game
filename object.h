@@ -8,8 +8,9 @@ class Object {
     int y;
     int width;
     int height;
+    int speed;
   public:
-    Object(int x, int y, int w, int h);
+    Object(int x, int y, int w, int h, int speed = 10);
     int getX();
     int getY();
     int getWidth();
