@@ -23,7 +23,7 @@ void close_SDL(SDL_Renderer* renderer, SDL_Window* window);
 
 
 int main() {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
         return 1;
     }
@@ -35,7 +35,7 @@ int main() {
         SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN
     );
-    if (!window) {
+    if(!window) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
         SDL_Quit();
         return 1;
@@ -50,8 +50,8 @@ int main() {
       running = event_loop(&player);
 
       //Clear screen
-      SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
-      SDL_RenderClear( renderer );
+      SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+      SDL_RenderClear(renderer);
 
       render_obj(renderer, &player);
       SDL_RenderPresent(renderer);
@@ -69,7 +69,7 @@ void close_SDL(SDL_Renderer* renderer, SDL_Window* window) {
 }
 
 void render_obj(SDL_Renderer* renderer, Object* obj) {
-  SDL_Rect rect = { obj->getX(), obj->getY(), obj->getWidth(), obj->getHeight() };
+  SDL_Rect rect = {obj->getX(), obj->getY(), obj->getWidth(), obj->getHeight()};
   SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
   SDL_RenderFillRect(renderer, &rect);
 }
@@ -77,7 +77,7 @@ void render_obj(SDL_Renderer* renderer, Object* obj) {
 bool event_loop(Object* player) {
   // event loop for keypress + escape
   SDL_Event event;
-  while (SDL_PollEvent(&event)) {
+  while(SDL_PollEvent(&event)) {
     if(event.type == SDL_QUIT) {
       return false;
     }
@@ -91,9 +91,9 @@ bool event_loop(Object* player) {
   // Check held keys
   const Uint8* keys = SDL_GetKeyboardState(NULL);
   int velX = 0;
-  if (keys[SDL_SCANCODE_LEFT])  
+  if(keys[SDL_SCANCODE_LEFT])  
     velX -= MOVE_SPEED;
-  if (keys[SDL_SCANCODE_RIGHT]) 
+  if(keys[SDL_SCANCODE_RIGHT]) 
     velX += MOVE_SPEED;
   update_obj(player, velX);
   return true;
@@ -109,9 +109,22 @@ void update_obj(Object* player, int velX) {
   // Apply velocity to position
   player->applyVelocity();
 
-  // Ground collision (simple)
-  if (player->getY() + player->getHeight() > SCREEN_HEIGHT) {
+  // Collision Physics
+  if(player->getY() + player->getHeight() > SCREEN_HEIGHT) {
     player->setY(SCREEN_HEIGHT - player->getHeight());
     player->setVelY(0);
   }
+  // right side collision 
+  if(player->getX() + player->getWidth() > SCREEN_WIDTH) {
+    player->setX(SCREEN_WIDTH - player->getWidth());
+    player->setVelX(0);
+  }
+
+  //left side collision
+  if(player->getX() < 0) {
+    player->setX(0);
+    player->setVelX(0);
+  }
+
+
 }
