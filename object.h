@@ -3,7 +3,7 @@
 #define OBJECT_H
 
 class Object {
-  private:
+  protected:
     int x;
     int velX;
     int velY;
