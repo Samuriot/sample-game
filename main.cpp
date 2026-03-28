@@ -1,7 +1,9 @@
 #include <SDL.h>
 #include <iostream>
+#include <memory>
 
 #include "object.h"
+#include "player.h"
 
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_WIDTH = 800;
@@ -27,6 +29,7 @@ int main() {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
         return 1;
     }
+
     SDL_Window* window = SDL_CreateWindow(
         "SDL2 Graphics Test",
         SDL_WINDOWPOS_CENTERED,
@@ -35,6 +38,7 @@ int main() {
         SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN
     );
+
     if(!window) {
         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -44,7 +48,9 @@ int main() {
     bool running = true;
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    Object player(100, 100, 50, 50);
+    // Object player(100, 100, 50, 50);
+    Player player(50, 50);
+    
 
     while(running) {
       running = event_loop(&player);
@@ -81,12 +87,7 @@ bool event_loop(Object* player) {
     if(event.type == SDL_QUIT) {
       return false;
     }
-    else if(event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-      // Only jump if on the ground
-      if(player->getY() + player->getHeight() >= SCREEN_HEIGHT) {
-        player->setVelY(JUMP_FORCE);
-      }
-    }
+    player->handle_event(&event);    
   }      
   // Check held keys
   const Uint8* keys = SDL_GetKeyboardState(NULL);
@@ -99,31 +100,31 @@ bool event_loop(Object* player) {
   return true;
 }
 
-void update_obj(Object* player, int velX) {
-  // Update player velocity
-  player->setVelX(velX);
+void update_obj(Object* obj, int velX) {
+  // Update obj velocity
+  obj->setVelX(velX);
 
   // Apply gravity
-  player->setVelY(player->getVelY() + GRAVITY);
+  obj->setVelY(obj->getVelY() + GRAVITY);
 
   // Apply velocity to position
-  player->applyVelocity();
+  obj->applyVelocity();
 
   // Collision Physics
-  if(player->getY() + player->getHeight() > SCREEN_HEIGHT) {
-    player->setY(SCREEN_HEIGHT - player->getHeight());
-    player->setVelY(0);
+  if(obj->getY() + obj->getHeight() > SCREEN_HEIGHT) {
+    obj->setY(SCREEN_HEIGHT - obj->getHeight());
+    obj->setVelY(0);
   }
   // right side collision 
-  if(player->getX() + player->getWidth() > SCREEN_WIDTH) {
-    player->setX(SCREEN_WIDTH - player->getWidth());
-    player->setVelX(0);
+  if(obj->getX() + obj->getWidth() > SCREEN_WIDTH) {
+    obj->setX(SCREEN_WIDTH - obj->getWidth());
+    obj->setVelX(0);
   }
 
   //left side collision
-  if(player->getX() < 0) {
-    player->setX(0);
-    player->setVelX(0);
+  if(obj->getX() < 0) {
+    obj->setX(0);
+    obj->setVelX(0);
   }
 
 
