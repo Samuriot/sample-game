@@ -1,19 +1,21 @@
 CXX = clang++
-CXXFLAGS = $(shell sdl2-config --cflags) -Wall -std=c++17
+CXXFLAGS = $(shell sdl2-config --cflags) -I include -Wall -std=c++17
 LDFLAGS = $(shell sdl2-config --libs) -framework Cocoa
 
-TARGET = my_program
-SRCS = main.cpp object.cpp
-OBJS = $(SRCS:.cpp=.o)
+TARGET = build/my_program
+SRCS = src/main.cpp src/object.cpp src/player.cpp src/engine.cpp
+OBJS = $(SRCS:src/%.cpp=build/%.o)
 
 $(TARGET): $(OBJS)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-%.o: %.cpp
+build/%.o: src/%.cpp | build
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+build:
+	mkdir -p build
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -rf build
 
 .PHONY: clean
-

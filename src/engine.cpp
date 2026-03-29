@@ -14,9 +14,7 @@ Engine::Engine(int w, int h, uint8_t delay) {
 void Engine::init(int w, int h) {
   if(SDL_Init(SDL_INIT_VIDEO) < 0) {
     throw std::runtime_error(
-      std::string(
-        "SDL initialization failed: " + SDL_GetError()
-      )
+      std::string("SDL initialization failed: ") + SDL_GetError()
     );
   }
 
@@ -49,7 +47,7 @@ void Engine::init(int w, int h) {
 
 void Engine::run() {
   while(this->running) {
-    SDL_Set_RenderDrawColor(
+    SDL_SetRenderDrawColor(
       this->renderer.get(),
       0xFF,
       0xFF,

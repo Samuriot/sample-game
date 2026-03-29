@@ -9,20 +9,11 @@ const int SCREEN_HEIGHT = 600;
 const int SCREEN_WIDTH = 800;
 const int GRAVITY = 1;
 const int MOVE_SPEED = 5;
-const int JUMP_FORCE = -15;
 
-// updates the player object based on key press
 void update_obj(Object* obj, int velX);
-
-// object rendering layer using SDL
 void render_obj(SDL_Renderer* renderer, Object* obj);
-
-// main event loop that polls for key presses
 bool event_loop(Object* obj);
-
-// graceful exit of SDL
-void close_SDL(SDL_Renderer* renderer, SDL_Window* window); 
-
+void close_SDL(SDL_Renderer* renderer, SDL_Window* window);
 
 int main() {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -48,23 +39,20 @@ int main() {
     bool running = true;
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    // Object player(100, 100, 50, 50);
     Player player(50, 50);
-    
 
     while(running) {
       running = event_loop(&player);
 
-      //Clear screen
       SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
       SDL_RenderClear(renderer);
 
       render_obj(renderer, &player);
       SDL_RenderPresent(renderer);
-      SDL_Delay(16);  // ~60fps
+      SDL_Delay(16);
     }
     close_SDL(renderer, window);
-    
+
     return 0;
 }
 
@@ -81,51 +69,38 @@ void render_obj(SDL_Renderer* renderer, Object* obj) {
 }
 
 bool event_loop(Object* player) {
-  // event loop for keypress + escape
   SDL_Event event;
   while(SDL_PollEvent(&event)) {
     if(event.type == SDL_QUIT) {
       return false;
     }
-    player->handle_event(&event);    
-  }      
-  // Check held keys
+    player->handle_event(&event);
+  }
   const Uint8* keys = SDL_GetKeyboardState(NULL);
   int velX = 0;
-  if(keys[SDL_SCANCODE_LEFT])  
+  if(keys[SDL_SCANCODE_LEFT])
     velX -= MOVE_SPEED;
-  if(keys[SDL_SCANCODE_RIGHT]) 
+  if(keys[SDL_SCANCODE_RIGHT])
     velX += MOVE_SPEED;
   update_obj(player, velX);
   return true;
 }
 
 void update_obj(Object* obj, int velX) {
-  // Update obj velocity
   obj->setVelX(velX);
-
-  // Apply gravity
   obj->setVelY(obj->getVelY() + GRAVITY);
-
-  // Apply velocity to position
   obj->applyVelocity();
 
-  // Collision Physics
   if(obj->getY() + obj->getHeight() > SCREEN_HEIGHT) {
     obj->setY(SCREEN_HEIGHT - obj->getHeight());
     obj->setVelY(0);
   }
-  // right side collision 
   if(obj->getX() + obj->getWidth() > SCREEN_WIDTH) {
     obj->setX(SCREEN_WIDTH - obj->getWidth());
     obj->setVelX(0);
   }
-
-  //left side collision
   if(obj->getX() < 0) {
     obj->setX(0);
     obj->setVelX(0);
   }
-
-
 }

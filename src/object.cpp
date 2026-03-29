@@ -60,3 +60,6 @@ void Object::applyVelocity() {
   this->y += this->velY;
 }
 
+void Object::handle_event(SDL_Event* event) {
+}
+

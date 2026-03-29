@@ -2,6 +2,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <SDL.h>
+
 class Object {
   protected:
     int x;
@@ -12,6 +14,7 @@ class Object {
     int height;
   public:
     Object(int x, int y, int w, int h);
+    virtual ~Object() = default;
     int getX();
     int getY();
     int getWidth();
@@ -23,6 +26,7 @@ class Object {
     void setVelX(int);
     void setVelY(int);
     void applyVelocity();
+    virtual void handle_event(SDL_Event* event);
 };
 
 #endif // OBJECT_H
