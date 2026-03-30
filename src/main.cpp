@@ -4,6 +4,7 @@
 
 #include "object.h"
 #include "player.h"
+#include "engine.h"
 
 const int SCREEN_HEIGHT = 600;
 const int SCREEN_WIDTH = 800;
@@ -16,45 +17,50 @@ bool event_loop(Object* obj);
 void close_SDL(SDL_Renderer* renderer, SDL_Window* window);
 
 int main() {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-        return 1;
-    }
-
-    SDL_Window* window = SDL_CreateWindow(
-        "SDL2 Graphics Test",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
-        SDL_WINDOW_SHOWN
-    );
-
-    if(!window) {
-        std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
-        SDL_Quit();
-        return 1;
-    }
-
-    bool running = true;
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
-
-    Player player(50, 50);
-
-    while(running) {
-      running = event_loop(&player);
-
-      SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-      SDL_RenderClear(renderer);
-
-      render_obj(renderer, &player);
-      SDL_RenderPresent(renderer);
-      SDL_Delay(16);
-    }
-    close_SDL(renderer, window);
-
-    return 0;
+  Engine game(SCREEN_WIDTH, SCREEN_HEIGHT, 16);
+  game.run();
 }
+
+// int main() {
+//     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+//         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
+//         return 1;
+//     }
+
+//     SDL_Window* window = SDL_CreateWindow(
+//         "SDL2 Graphics Test",
+//         SDL_WINDOWPOS_CENTERED,
+//         SDL_WINDOWPOS_CENTERED,
+//         SCREEN_WIDTH,
+//         SCREEN_HEIGHT,
+//         SDL_WINDOW_SHOWN
+//     );
+
+//     if(!window) {
+//         std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
+//         SDL_Quit();
+//         return 1;
+//     }
+
+//     bool running = true;
+//     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+//     Player player(50, 50);
+
+//     while(running) {
+//       running = event_loop(&player);
+
+//       SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+//       SDL_RenderClear(renderer);
+
+//       render_obj(renderer, &player);
+//       SDL_RenderPresent(renderer);
+//       SDL_Delay(16);
+//     }
+//     close_SDL(renderer, window);
+
+//     return 0;
+// }
 
 void close_SDL(SDL_Renderer* renderer, SDL_Window* window) {
   SDL_DestroyRenderer(renderer);

@@ -29,8 +29,11 @@ class Engine {
     std::vector<std::unique_ptr<Object>> entities;
     bool running;
     uint8_t delay;
+
+    bool run_event_loop();
   public:
     Engine(int w, int h, uint8_t delay);
+    ~Engine();
     void init(int w, int h);
     void run();
     void shutdown();
