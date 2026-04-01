@@ -7,7 +7,7 @@
 class Player : public Object {
   public:
     Player(int w, int h);
-    void handle_event(SDL_Event* event);
+    void handle_event(SDL_Event* event) override;
 };
 
 #endif // PLAYER_H
